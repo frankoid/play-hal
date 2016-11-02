@@ -181,4 +181,26 @@ class TestHalConstruction extends FunSuite with Matchers {
         }""".stripMargin)
       )
   }
+
+  test("multiple links with the same rel are represented as a JSON array") {
+    Hal.links(
+      HalLink("self", "/orders"),
+      HalLink("ea:admin", "/admins/2").withTitle("Fred"),
+      HalLink("ea:admin", "/admins/5").withTitle("Kate")
+    ).json should equal(
+
+        Json.parse("""{
+        "_links": {
+               "self": { "href": "/orders" }
+             },
+             "ea:admin": [{
+               "href": "/admins/2",
+               "title": "Fred"
+             }, {
+               "href": "/admins/5",
+               "title": "Kate"
+             }]
+        }""".stripMargin)
+    )
+  }
 }
